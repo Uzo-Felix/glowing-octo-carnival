@@ -1,0 +1,1185 @@
+openapi: 3.0.0
+info:
+  title: Team Beetle Boilerplate API
+  version: 1.0.0
+  description: API for the comprehensive boilerplate application
+
+servers:
+  - url: https://api.example.com/v1
+
+paths:
+  /auth:
+    post:
+      summary: Authenticate user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/social:
+    post:
+      summary: Social authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialAuthRequest'
+      responses:
+        '200':
+          description: Successful social authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/magic-link:
+    post:
+      summary: Request magic link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MagicLinkRequest'
+      responses:
+        '200':
+          description: Magic link sent successfully
+
+  /auth/change-password:
+    put:
+      summary: Change user password
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Password changed successfully
+
+  /users:
+    get:
+      summary: Get all users
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersList'
+
+    post:
+      summary: Create a new user
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{userId}:
+    get:
+      summary: Get user by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      summary: Update user
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    delete:
+      summary: Delete user
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted successfully
+
+  /organizations:
+    get:
+      summary: Get all organizations
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationsList'
+
+    post:
+      summary: Create a new organization
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+      responses:
+        '201':
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+
+  /organizations/{orgId}:
+    get:
+      summary: Get organization by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: orgId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+
+    put:
+      summary: Update organization
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: orgId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRequest'
+      responses:
+        '200':
+          description: Organization updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+
+    delete:
+      summary: Delete organization
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: orgId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Organization deleted successfully
+
+  /payments:
+    post:
+      summary: Create a payment
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+        '201':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /payments/{paymentId}:
+    get:
+      summary: Get payment by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: paymentId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /messages:
+    post:
+      summary: Send a message
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '201':
+          description: Message sent successfully
+
+  /settings:
+    get:
+      summary: Get user settings
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSettings'
+
+    put:
+      summary: Update user settings
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSettingsRequest'
+      responses:
+        '200':
+          description: Settings updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSettings'
+
+  /contact:
+    post:
+      summary: Submit contact form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactFormRequest'
+      responses:
+        '201':
+          description: Contact form submitted successfully
+
+  /waitlist:
+    post:
+      summary: Join waitlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaitlistRequest'
+      responses:
+        '201':
+          description: Added to waitlist successfully
+
+  /user-data:
+    get:
+      summary: Export user data
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User data exported successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataExport'
+
+  /widgets:
+    get:
+      summary: Get user widgets
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of user widgets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetsList'
+
+    post:
+      summary: Create a new widget
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWidgetRequest'
+      responses:
+        '201':
+          description: Widget created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+
+  /widgets/{widgetId}:
+    get:
+      summary: Get widget by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: widgetId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Widget details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Widget'
+
+  /data:
+    get:
+      summary: Get data list
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataList'
+
+  /charts:
+    get:
+      summary: Get chart data
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Chart data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartData'
+
+  /content:
+    put:
+      summary: Update content
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContentRequest'
+      responses:
+        '200':
+          description: Content updated successfully
+
+  /notifications:
+    get:
+      summary: Get user notifications
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationsList'
+
+  /blog:
+    get:
+      summary: Get blog posts
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of blog posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPostsList'
+
+  /invite:
+    post:
+      summary: Create invite link
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInviteRequest'
+      responses:
+        '201':
+          description: Invite link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteLink'
+
+  /email-templates:
+    get:
+      summary: Get email templates
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of email templates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplatesList'
+
+    post:
+      summary: Create email template
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmailTemplateRequest'
+      responses:
+        '201':
+          description: Email template created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplate'
+
+  /ai:
+    post:
+      summary: Make AI request
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIRequest'
+      responses:
+        '200':
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIResponse'
+
+  /activity-log:
+    get:
+      summary: Get activity log
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Activity log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityLog'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    AuthRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    SocialAuthRequest:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: [google, facebook, twitter]
+        token:
+          type: string
+      required:
+        - provider
+        - token
+
+    MagicLinkRequest:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+
+    ChangePasswordRequest:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+      required:
+        - currentPassword
+        - newPassword
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [user, admin, superadmin]
+        createdAt:
+          type: string
+          format: date-time
+    UpdateUserRequest:
+        type: object
+        properties:
+          name:
+            type: string
+          email:
+            type: string
+
+    UsersList:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    CreateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - email
+        - password
+
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    OrganizationsList:
+      type: object
+      properties:
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organization'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    CreateOrganizationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+
+    UpdateOrganizationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed, failed]
+        provider:
+          type: string
+          enum: [stripe, flutterwave, lemonsqueezy]
+        createdAt:
+          type: string
+          format: date-time
+
+    CreatePaymentRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+        provider:
+          type: string
+          enum: [stripe, flutterwave, lemonsqueezy]
+      required:
+        - amount
+        - currency
+        - provider
+
+    SendMessageRequest:
+      type: object
+      properties:
+        recipient:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+        templateId:
+          type: string
+      required:
+        - recipient
+        - subject
+        - body
+
+    UserSettings:
+      type: object
+      properties:
+        language:
+          type: string
+        region:
+          type: string
+        notifications:
+          type: object
+          properties:
+            email:
+              type: boolean
+            push:
+              type: boolean
+
+    UpdateSettingsRequest:
+      type: object
+      properties:
+        language:
+          type: string
+        region:
+          type: string
+        notifications:
+          type: object
+          properties:
+            email:
+              type: boolean
+            push:
+              type: boolean
+
+    ContactFormRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        message:
+          type: string
+      required:
+        - name
+        - email
+        - message
+
+    WaitlistRequest:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+
+    UserDataExport:
+      type: object
+      properties:
+        personalInfo:
+          $ref: '#/components/schemas/User'
+        settings:
+          $ref: '#/components/schemas/UserSettings'
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Widget'
+
+    Widget:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        data:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    WidgetsList:
+      type: object
+      properties:
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Widget'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    CreateWidgetRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        data:
+          type: object
+      required:
+        - name
+        - type
+
+    DataList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    ChartData:
+      type: object
+      properties:
+        labels:
+          type: array
+          items:
+            type: string
+        datasets:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              data:
+                type: array
+                items:
+                  type: number
+
+    UpdateContentRequest:
+      type: object
+      properties:
+        contentId:
+          type: string
+        content:
+          type: string
+      required:
+        - contentId
+        - content
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        message:
+          type: string
+        read:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    NotificationsList:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    BlogPost:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    BlogPostsList:
+      type: object
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlogPost'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    CreateInviteRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+      required:
+        - email
+        - role
+
+    InviteLink:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        token:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+
+    EmailTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    EmailTemplatesList:
+      type: object
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplate'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    CreateEmailTemplateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+      required:
+        - name
+        - subject
+        - body
+
+    AIRequest:
+      type: object
+      properties:
+        prompt:
+          type: string
+        options:
+          type: object
+      required:
+        - prompt
+
+    AIResponse:
+      type: object
+      properties:
+        result:
+          type: string
+
+    ActivityLogEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        action:
+          type: string
+        details:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+
+    ActivityLog:
+      type: object
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityLogEntry'
+        totalCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
